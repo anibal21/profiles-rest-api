@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 
+//Se agregó esta libreria
 from PIL import Image
 
 # Create your models here.
