@@ -60,3 +60,12 @@ class ProfileFeedItem(models.Model):
     def __str__(self):
         """Return the model as a string"""
         return self.status_text
+
+class Image(models.Model):
+    """Image model"""
+    detail = models.CharField(max_length=255, default="Nombre")
+    image = models.ImageField("images")
+
+    def __str__(self):
+        """Used for Django to convert object to String"""
+        return self.detail
