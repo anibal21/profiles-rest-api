@@ -40,3 +40,10 @@ class UploadImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Image
         fields = ('id','detail','image')
+
+class UploadFileSerializer(serializers.ModelSerializer):
+    """A serializer for upload files"""
+
+    class Meta:
+        model = models.AnyFile
+        fields = ('id','detail','anyfile')

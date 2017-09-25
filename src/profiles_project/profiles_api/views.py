@@ -151,3 +151,8 @@ class ImageUploadViewSet(viewsets.ModelViewSet):
 
     queryset = models.Image.objects.all();
     serializer_class = serializers.UploadImageSerializer
+
+class FileUploadViewSet(viewsets.ModelViewSet):
+
+    queryset = models.AnyFile.objects.all();
+    serializer_class = serializers.UploadFileSerializer
