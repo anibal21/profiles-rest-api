@@ -80,3 +80,12 @@ class AnyFile(models.Model):
     def __str__(self):
         """Used for Django to convert object to String"""
         return self.detail
+
+class Proof(models.Model):
+    """File model"""
+    detail = models.CharField(max_length=255, default="Nombre")
+    detail2 = models.CharField(max_length=255, default="Nombre")
+
+    def __str__(self):
+        """Used for Django to convert object to String"""
+        return self.detail

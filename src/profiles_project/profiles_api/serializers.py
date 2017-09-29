@@ -47,3 +47,10 @@ class UploadFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AnyFile
         fields = ('id','detail','anyfile')
+
+class MultiUploadSerializer(serializers.ModelSerializer):
+    """A serializer for upload multiple files for an user"""
+
+    class Meta:
+        model = models.AnyFile
+        fields = ('id','detail','anyfile')

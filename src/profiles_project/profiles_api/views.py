@@ -10,6 +10,8 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import FormParser
 
 from . import serializers
 from . import models
@@ -148,11 +150,35 @@ class UserProfileFeedViewSet(viewsets.ModelViewSet):
         serializer.save(user_profile=self.request.user)
 
 class ImageUploadViewSet(viewsets.ModelViewSet):
+    """Cambie de lugares estas dos llamadas"""
 
-    queryset = models.Image.objects.all();
     serializer_class = serializers.UploadImageSerializer
+    queryset = models.Image.objects.all();
 
 class FileUploadViewSet(viewsets.ModelViewSet):
+    """Cambie de lugares estas dos llamadas"""
 
-    queryset = models.AnyFile.objects.all();
     serializer_class = serializers.UploadFileSerializer
+    queryset = models.AnyFile.objects.all();
+
+class MultiUploadViewSet(viewsets.ModelViewSet):
+    """Guarda una lista de archivos"""
+
+    queryset = models.AnyFile.objects.all()
+    serializer_class = serializers.MultiUploadSerializer
+    search_fields = ('detail','anyfile')
+
+    def create(self, request, *args, **kwargs):
+        """
+        #checks if post request data is an array initializes serializer with many=True
+        else executes default CreateModelMixin.create function
+        """
+        is_many = isinstance(request.data, list)
+        if not is_many:
+            return super(MultiUploadViewSet, self).create(request, *args, **kwargs)
+        else:
+            serializer = self.get_serializer(data=request.data, many=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
