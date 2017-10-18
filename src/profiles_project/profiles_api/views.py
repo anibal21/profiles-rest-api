@@ -164,7 +164,7 @@ class FileUploadViewSet(viewsets.ModelViewSet):
 class MultiUploadViewSet(viewsets.ModelViewSet):
     """Guarda una lista de archivos"""
 
-    queryset = models.AnyFile.objects.all()
+    queryset = models.Proof.objects.all()
     serializer_class = serializers.MultiUploadSerializer
     search_fields = ('detail','anyfile')
 

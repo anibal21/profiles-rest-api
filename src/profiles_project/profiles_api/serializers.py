@@ -52,5 +52,5 @@ class MultiUploadSerializer(serializers.ModelSerializer):
     """A serializer for upload multiple files for an user"""
 
     class Meta:
-        model = models.AnyFile
+        model = models.Proof
         fields = ('id','detail','anyfile')

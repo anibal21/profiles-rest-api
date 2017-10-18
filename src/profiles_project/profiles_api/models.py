@@ -84,7 +84,7 @@ class AnyFile(models.Model):
 class Proof(models.Model):
     """File model"""
     detail = models.CharField(max_length=255, default="Nombre")
-    detail2 = models.CharField(max_length=255, default="Nombre")
+    anyfile = models.FileField("anyfile")
 
     def __str__(self):
         """Used for Django to convert object to String"""
