@@ -32,18 +32,23 @@ class UserProfileManager(BaseUserManager):
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     """ Represents a "user profile inside our system."""
     email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=100)
+    lastname = models.CharField(max_length=100, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    country = models.CharField(max_length=100, null=True)
+    phone = models.CharField(max_length=100, null=True)
+    url_image = models.CharField(max_length=100, null=True)
+    state = models.IntegerField(default=1)
 
     objects = UserProfileManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['name','lastname','phone']
 
     def get_full_name(self):
         """Used to get a full name"""
-        return self.name
+        return self.name + self.lastname
 
     def get_short_name(self):
         """ Used to get a short name"""
@@ -52,6 +57,13 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         """ Used for Django to convert object to String"""
         return self.email
+
+class UserProcessHistory(models.Model):
+    user_profile = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
+    description = models.CharField(max_length=500, null=True)
+    last_mod = models.DateTimeField(auto_now_add=True)
+    remaining_storage = models.DecimalField(max_digits=5, decimal_places=4,default=0)
+    status = models.IntegerField(default=1)
 
 class ProfileFeedItem(models.Model):
     """Profile status update."""

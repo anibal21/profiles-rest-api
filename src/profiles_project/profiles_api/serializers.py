@@ -10,7 +10,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserProfile
-        fields = ('id', 'email', 'name', 'password')
+        fields = ('id','name','lastname', 'email', 'password','country','phone','url_image')
         extra_kwargs = {'password':{'write_only':True}}
 
     def create(self, validated_data):
@@ -18,7 +18,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         user = models.UserProfile(
             email = validated_data['email'],
-            name = validated_data['name']
+            name = validated_data['name'],
+            lastname = validated_data['lastname'],
+            country = validated_data['country'],
+            phone = validated_data['phone'],
+            url_image = validated_data['url_image']
+
         )
 
         user.set_password(validated_data['password'])
@@ -33,6 +38,13 @@ class ProfileFeedItemSerializer(serializers.ModelSerializer):
         model = models.ProfileFeedItem
         fields = ('id', 'user_profile', 'status_text', 'created_on')
         extra_kwargs = {'user_profile': {'read_only':True}}
+
+class UserProcessHistorySerializer(serializers.ModelSerializer):
+    """ A serializer for load process made for user"""
+
+    class Meta:
+        model =models.UserProcessHistory
+        fields = ('user_profile','description','last_mod','remaining_storage','status')
 
 class UploadImageSerializer(serializers.ModelSerializer):
     """A serializer for upload images"""

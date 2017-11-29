@@ -10,12 +10,16 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import BasePermission
 from rest_framework.parsers import MultiPartParser
 from rest_framework.parsers import FormParser
 
 from . import serializers
 from . import models
 from . import permissions
+
+import logging
+logger = logging.getLogger("__views__")
 
 # Create your views here.
 
@@ -123,7 +127,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateOwnProfile,)
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('name', 'email',)
+    search_fields = ('name', 'email','country',)
 
 
 class LoginViewSet(viewsets.ViewSet):
@@ -133,8 +137,28 @@ class LoginViewSet(viewsets.ViewSet):
 
     def create(self, request):
         """Use the ObtainAuthToken APIView to validate and create a token."""
-
         return ObtainAuthToken().post(request)
+
+class UserProcessHistoryViewSet(viewsets.ModelViewSet):
+    """Create the history of user status bar """
+
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = serializers.UserProcessHistorySerializer
+    queryset = models.UserProcessHistory.objects.all()
+    permission_classes = (permissions.SeeOwnStatus, IsAuthenticated)
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return models.UserProcessHistory.objects.filter(user_profile=user)
+
+
+    def perform_create(self, serializer):
+        """Sets the user profile to the logged in user"""
+        serializer.save()
 
 class UserProfileFeedViewSet(viewsets.ModelViewSet):
     """Handles creating, reading and updating profile feed items"""
@@ -147,7 +171,7 @@ class UserProfileFeedViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Sets the user profile to the logged in user"""
 
-        serializer.save(user_profile=self.request.user)
+        serializer.save(user=self.request.user)
 
 class ImageUploadViewSet(viewsets.ModelViewSet):
     """Cambie de lugares estas dos llamadas"""

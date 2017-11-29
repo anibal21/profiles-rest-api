@@ -13,6 +13,7 @@ router.register('feed', views.UserProfileFeedViewSet)
 router.register('image-upload', views.ImageUploadViewSet)
 router.register('file-upload', views.FileUploadViewSet)
 router.register('multi-upload', views.MultiUploadViewSet)
+router.register('user-process-history', views.UserProcessHistoryViewSet)
 
 urlpatterns = [
     url(r'^hello-view/', views.HelloApiView.as_view()),
