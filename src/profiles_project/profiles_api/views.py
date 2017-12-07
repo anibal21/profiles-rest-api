@@ -14,6 +14,11 @@ from rest_framework.permissions import BasePermission
 from rest_framework.parsers import MultiPartParser
 from rest_framework.parsers import FormParser
 
+#To create directories
+import os, shutil, errno
+from django.conf import settings
+import hashlib
+
 from . import serializers
 from . import models
 from . import permissions
@@ -129,7 +134,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email','country',)
 
-
 class LoginViewSet(viewsets.ViewSet):
     """Checks email and password and returns an auth token."""
 
@@ -188,9 +192,10 @@ class FileUploadViewSet(viewsets.ModelViewSet):
 class MultiUploadViewSet(viewsets.ModelViewSet):
     """Guarda una lista de archivos"""
 
-    queryset = models.Proof.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    queryset = models.UserFile.objects.all()
     serializer_class = serializers.MultiUploadSerializer
-    search_fields = ('detail','anyfile')
+    permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
         """
@@ -206,3 +211,11 @@ class MultiUploadViewSet(viewsets.ModelViewSet):
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def get_queryset(self):
+        """
+        This view should return a list of all files
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return models.UserFile.objects.filter(user=user)

@@ -4,6 +4,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 
 from PIL import Image
+import os
 
 # Create your models here.
 
@@ -39,6 +40,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     country = models.CharField(max_length=100, null=True)
     phone = models.CharField(max_length=100, null=True)
     url_image = models.CharField(max_length=100, null=True)
+    url_docs = models.CharField(max_length=500, null=True)
     state = models.IntegerField(default=1)
 
     objects = UserProfileManager()
@@ -93,11 +95,40 @@ class AnyFile(models.Model):
         """Used for Django to convert object to String"""
         return self.detail
 
-class Proof(models.Model):
-    """File model"""
+"""class Proof(models.Model):
+    File model
     detail = models.CharField(max_length=255, default="Nombre")
     anyfile = models.FileField("anyfile")
 
     def __str__(self):
+        Used for Django to convert object to String
+        return self.detail"""
+
+class Filetype(models.Model):
+    """Tipos de archivo"""
+    name = models.CharField(max_length=255, default="Nombre")
+    state = models.IntegerField(default=1)
+
+    def __str__(self):
         """Used for Django to convert object to String"""
-        return self.detail
+        return self.name
+
+def magic_url(instance, filename):
+    print(instance.filename)
+    return os.path.join( instance.url_docs + "/" + instance.filename)
+
+class UserFile(models.Model):
+    """Los archivos de los usuarios"""
+    user = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
+    filename = models.CharField(max_length=255)
+    filesize = models.CharField(max_length=255)
+    filetype = models.ForeignKey('Filetype', on_delete=models.CASCADE)
+    url_docs = models.CharField(max_length=255)
+    last_mod = models.DateTimeField(auto_now_add=True)
+    state = models.IntegerField(default=1)
+    detail = models.CharField(max_length=255)
+    anyfile = models.FileField("anyfile",upload_to=magic_url)
+
+    def __str__(self):
+        """Used for Django to convert object to String"""
+        return self.filename
