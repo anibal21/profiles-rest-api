@@ -120,6 +120,7 @@ def magic_url(instance, filename):
 class UserFile(models.Model):
     """Los archivos de los usuarios"""
     user = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
+    email = models.CharField(max_length=255)
     filename = models.CharField(max_length=255)
     filesize = models.CharField(max_length=255)
     filetype = models.ForeignKey('Filetype', on_delete=models.CASCADE)

@@ -88,17 +88,18 @@ class MultiUploadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserFile
-        fields = ('id','user','filename','filesize','filetype','last_mod','state','detail','anyfile')
+        fields = ('id','email','filename','filesize','filetype','last_mod','state','detail','anyfile')
 
     def create(self, validated_data):
         """Create and return a new file"""
 
-        user = models.UserProfile.objects.get(email = validated_data['user'])
+        user = models.UserProfile.objects.get(email = validated_data['email'])
 
         hashed = hashlib.sha256(str(user.email).encode('utf-8')).hexdigest()
 
         userfile = models.UserFile(
             user = user,
+            email = validated_data['email'],
             filename = validated_data['filename'],
             filesize = validated_data['filesize'],
             filetype = validated_data['filetype'],

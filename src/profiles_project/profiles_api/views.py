@@ -213,9 +213,7 @@ class MultiUploadViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
-        """
-        This view should return a list of all files
-        for the currently authenticated user.
-        """
+        """This view should return a list of all files
+        for the currently authenticated user."""
         user = self.request.user
         return models.UserFile.objects.filter(user=user)
