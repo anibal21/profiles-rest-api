@@ -216,4 +216,11 @@ class MultiUploadViewSet(viewsets.ModelViewSet):
         """This view should return a list of all files
         for the currently authenticated user."""
         user = self.request.user
-        return models.UserFile.objects.filter(user=user)
+        queryset = models.UserFile.objects.all()
+        filetype = self.request.query_params.get('filetype', None)
+        if filetype is not None:
+            filetype_obj = models.Filetype.objects.filter(id=filetype)
+            filtered_queryset = queryset.filter(filetype=filetype_obj, user=user)
+            return filtered_queryset
+        else:
+            return queryset.filter(user=user)
