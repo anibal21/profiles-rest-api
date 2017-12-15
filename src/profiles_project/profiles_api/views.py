@@ -140,6 +140,20 @@ class LoginViewSet(viewsets.ViewSet):
     serializer_class = AuthTokenSerializer
 
     def create(self, request):
+        if ObtainAuthToken().post(request).data:
+            username = request.data.get("username")
+            token = ObtainAuthToken().post(request).data['token']
+            user_model = models.UserProfile.objects.get(email=username);
+            plan_model = models.UserPlan.objects.get(user=user_model, status=1)
+            return Response({'token':token,
+                            'name':user_model.name,
+                            'lastname':user_model.lastname,
+                            'plan_id':plan_model.plan.id,
+                            'plan_name':plan_model.plan.name,
+                            'plan_price':plan_model.plan.price,
+                            'plan_storage':plan_model.plan.storage,
+                            'plan_details':plan_model.plan.detail
+                            })
         """Use the ObtainAuthToken APIView to validate and create a token."""
         return ObtainAuthToken().post(request)
 
