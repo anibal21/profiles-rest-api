@@ -37,8 +37,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     lastname = models.CharField(max_length=100, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    country = models.CharField(max_length=100, null=True)
-    phone = models.CharField(max_length=100, null=True)
     url_image = models.CharField(max_length=100, null=True)
     url_docs = models.CharField(max_length=500, null=True)
     status = models.IntegerField(default=1)

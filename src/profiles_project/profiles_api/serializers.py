@@ -15,7 +15,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserProfile
-        fields = ('id','name','lastname', 'email', 'password','country','phone','url_image')
+        fields = ('id','name','lastname', 'email', 'password','url_image')
         extra_kwargs = {'password':{'write_only':True}}
 
     def create(self, validated_data):
@@ -43,8 +43,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             email = validated_data['email'],
             name = validated_data['name'],
             lastname = validated_data['lastname'],
-            country = validated_data['country'],
-            phone = validated_data['phone'],
             url_image = validated_data['url_image'],
             url_docs = hashed
         )
