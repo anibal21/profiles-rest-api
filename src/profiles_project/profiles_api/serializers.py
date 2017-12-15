@@ -67,10 +67,10 @@ class UserProcessHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model =models.UserProcessHistory
-        fields = ('user_profile','description','last_mod','remaining_storage','status')
+        fields = ('user_profile','description','last_mod','full_storage','remaining_storage','remaining_storage_doc','remaining_storage_image','remaining_storage_music','remaining_storage_video','status')
 
 class UploadImageSerializer(serializers.ModelSerializer):
-    """A serializer for upload images"""
+    """A serializer for uploa_d,'images"""
 
     class Meta:
         model = models.Image
@@ -111,3 +111,21 @@ class MultiUploadSerializer(serializers.ModelSerializer):
         userfile.save()
 
         return userfile
+
+class PlanSerializer(serializers.ModelSerializer):
+    """A serializer for upload files"""
+
+    class Meta:
+        model = models.PlanType
+        fields = ('id','name','price','storage','detail','status')
+
+class UserPlanSerializer(serializers.Serializer):
+    email = serializers.CharField(max_length=255)
+    plan_id = serializers.CharField(max_length=10)
+
+class ListUserPlanSerializer(serializers.Serializer):
+    user = serializers.CharField(max_length=255)
+    plan = serializers.CharField(max_length=255)
+
+class GetUserPlanSerializer(serializers.Serializer):
+    email = serializers.CharField(max_length=255)

@@ -189,6 +189,54 @@ class FileUploadViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.UploadFileSerializer
     queryset = models.AnyFile.objects.all();
 
+class PlanViewSet(viewsets.ModelViewSet):
+    """Cambie de lugares estas dos llamadas"""
+
+    serializer_class = serializers.PlanSerializer
+    queryset = models.PlanType.objects.all();
+
+class UserPlanViewSet(viewsets.ViewSet):
+
+    serializer_class = serializers.UserPlanSerializer
+
+    def list(self,request):
+        params = serializers.GetUserPlanSerializer(data=request.query_params)
+        if not params.is_valid():
+            queryset = models.UserPlan.objects.all()
+            serializer = serializers.ListUserPlanSerializer(queryset, many=True)
+            return Response(serializer.data)
+        else:
+            email = request.query_params['email']
+            user_model = models.UserProfile.objects.get(email=email, status=1)
+            queryset = models.UserPlan.objects.filter(user = user_model)
+            serializer = serializers.ListUserPlanSerializer(queryset, many=True)
+            return Response(serializer.data)
+
+    def create(self, request):
+        """Create a new hello message."""
+
+        serializer = serializers.UserPlanSerializer(data=request.data)
+
+        if serializer.is_valid():
+            email = serializer.data.get('email')
+            plan_id = serializer.data.get('plan_id')
+
+            user_model = models.UserProfile.objects.get(email = email)
+            plan_model = models.PlanType.objects.get(id = plan_id)
+
+            userplan = models.UserPlan(
+                user = user_model,
+                plan = plan_model,
+                status = 1
+            )
+            userplan.save()
+
+            message = 'Email:{0} - Id Plan: {1}'.format(email,plan_id)
+            return Response({'Server Response': message})
+        else:
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class MultiUploadViewSet(viewsets.ModelViewSet):
     """Guarda una lista de archivos"""
 

@@ -13,6 +13,8 @@ router.register('feed', views.UserProfileFeedViewSet)
 router.register('image-upload', views.ImageUploadViewSet)
 router.register('file-upload', views.FileUploadViewSet)
 router.register('multi-upload', views.MultiUploadViewSet)
+router.register('plan', views.PlanViewSet)
+router.register('user_plan', views.UserPlanViewSet, base_name='user_plan')
 router.register('user-process-history', views.UserProcessHistoryViewSet)
 
 urlpatterns = [
