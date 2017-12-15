@@ -148,5 +148,9 @@ class PlanType(models.Model):
         """ Used for Django to convert object to String"""
         return str(self.id)
 
-class status:
+class status(models.Model):
     name = models.CharField(max_length=255, default="")
+
+    def __str__(self):
+        """ Used for Django to convert object to String"""
+        return str(self.name)
