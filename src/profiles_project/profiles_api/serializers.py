@@ -15,12 +15,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserProfile
-        fields = ('id','name','lastname', 'email', 'password','url_image')
+        fields = ('id','name','lastname', 'email', 'password','url_image','plan_id')
         extra_kwargs = {'password':{'write_only':True}}
 
     def create(self, validated_data):
         """Create and return a new user"""
-
         #Creating a folder in static directory
         static_dir = settings.MEDIA_ROOT
 
@@ -44,11 +43,23 @@ class UserProfileSerializer(serializers.ModelSerializer):
             name = validated_data['name'],
             lastname = validated_data['lastname'],
             url_image = validated_data['url_image'],
+            plan_id = validated_data['plan_id'],
             url_docs = hashed
         )
 
         user.set_password(validated_data['password'])
         user.save()
+
+        user_model = models.UserProfile.objects.get(email=validated_data['email'])
+        plan_model = models.PlanType.objects.get(id=validated_data['plan_id'])
+
+        plan = models.UserPlan(
+            user = user_model,
+            plan = plan_model
+        )
+
+        plan.save()
+
 
         return user
 
@@ -86,7 +97,7 @@ class MultiUploadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserFile
-        fields = ('id','email','filename','filesize','filetype','last_mod','state','detail','anyfile')
+        fields = ('id','email','filename','filesize','filetype','last_mod','status','detail','anyfile')
 
     def create(self, validated_data):
         """Create and return a new file"""

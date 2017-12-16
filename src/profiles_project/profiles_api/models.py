@@ -39,6 +39,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     url_image = models.CharField(max_length=100, null=True)
     url_docs = models.CharField(max_length=500, null=True)
+    plan_id = models.IntegerField(default=1)
     status = models.IntegerField(default=1)
 
     objects = UserProfileManager()
