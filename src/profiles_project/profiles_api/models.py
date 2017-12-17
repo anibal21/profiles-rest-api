@@ -64,11 +64,11 @@ class UserProcessHistory(models.Model):
     description = models.CharField(max_length=500, null=True)
     last_mod = models.DateTimeField(auto_now_add=True)
     full_storage = models.DecimalField(max_digits=20, decimal_places=4,default=0)
-    remaining_storage = models.DecimalField(max_digits=20, decimal_places=4,default=0)
-    remaining_storage_doc = models.DecimalField(max_digits=20, decimal_places=4,default=0)
-    remaining_storage_music = models.DecimalField(max_digits=20, decimal_places=4,default=0)
-    remaining_storage_video = models.DecimalField(max_digits=20, decimal_places=4,default=0)
-    remaining_storage_image = models.DecimalField(max_digits=20, decimal_places=4,default=0)
+    filled_storage = models.DecimalField(max_digits=20, decimal_places=4,default=0)
+    filled_storage_doc = models.DecimalField(max_digits=20, decimal_places=4,default=0)
+    filled_storage_music = models.DecimalField(max_digits=20, decimal_places=4,default=0)
+    filled_storage_video = models.DecimalField(max_digits=20, decimal_places=4,default=0)
+    filled_storage_image = models.DecimalField(max_digits=20, decimal_places=4,default=0)
     status = models.IntegerField(default=1)
 
 class ProfileFeedItem(models.Model):
@@ -139,7 +139,7 @@ class UserPlan(models.Model):
 class PlanType(models.Model):
     name = models.CharField(max_length=255, default="")
     price = models.DecimalField(max_digits=20, decimal_places=4,default=0)
-    storage = models.IntegerField(default=1)
+    storage = models.DecimalField(max_digits=20, decimal_places=4,default=0)
     detail = models.CharField(max_length=255, default="")
     status = models.IntegerField(default=1)
 

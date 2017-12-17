@@ -145,6 +145,20 @@ class LoginViewSet(viewsets.ViewSet):
             token = ObtainAuthToken().post(request).data['token']
             user_model = models.UserProfile.objects.get(email=username);
             plan_model = models.UserPlan.objects.get(user=user_model, status=1)
+            user_history = models.UserProcessHistory.objects.get(user_profile = user_model, status = 1)
+            if not user_history:
+                user_history = models.UserProcessHistory(
+                    user_profile = user_model,
+                    description = "Login usuario",
+                    full_storage = plan_model.plan.storage,
+                    filled_storage = 0,
+                    filled_storage_doc = 0,
+                    filled_storage_music = 0,
+                    filled_storage_video = 0,
+                    filled_storage_image = 0
+                )
+                user_history.save()
+
             return Response({'token':token,
                             'name':user_model.name,
                             'lastname':user_model.lastname,
@@ -152,7 +166,12 @@ class LoginViewSet(viewsets.ViewSet):
                             'plan_name':plan_model.plan.name,
                             'plan_price':plan_model.plan.price,
                             'plan_storage':plan_model.plan.storage,
-                            'plan_details':plan_model.plan.detail
+                            'plan_details':plan_model.plan.detail,
+                            'filled_storage': user_history.filled_storage,
+                            'filled_storage_doc': user_history.filled_storage_doc,
+                            'filled_storage_music': user_history.filled_storage_music,
+                            'filled_storage_video': user_history.filled_storage_video,
+                            'filled_storage_image':user_history.filled_storage_image
                             })
         """Use the ObtainAuthToken APIView to validate and create a token."""
         return ObtainAuthToken().post(request)

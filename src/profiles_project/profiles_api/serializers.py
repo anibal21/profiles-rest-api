@@ -76,7 +76,7 @@ class UserProcessHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model =models.UserProcessHistory
-        fields = ('user_profile','description','last_mod','full_storage','remaining_storage','remaining_storage_doc','remaining_storage_image','remaining_storage_music','remaining_storage_video','status')
+        fields = ('user_profile','description','last_mod','filled_storage','filled_storage_doc','filled_storage_image','filled_storage_music','filled_storage_video','status')
 
 class UploadImageSerializer(serializers.ModelSerializer):
     """A serializer for uploa_d,'images"""
