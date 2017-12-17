@@ -112,7 +112,7 @@ class MultiUploadSerializer(serializers.ModelSerializer):
             filename = validated_data['filename'],
             filesize = validated_data['filesize'],
             filetype = validated_data['filetype'],
-            status = validated_data['state'],
+            status = validated_data['status'],
             detail = validated_data['detail'],
             anyfile = validated_data['anyfile'],
             url_docs = hashed
