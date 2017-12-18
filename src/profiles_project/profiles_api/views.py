@@ -176,6 +176,34 @@ class LoginViewSet(viewsets.ViewSet):
         """Use the ObtainAuthToken APIView to validate and create a token."""
         return ObtainAuthToken().post(request)
 
+class DeleteFileViewSet(viewsets.ViewSet):
+    """Checks email and password and returns an auth token."""
+    serializer_class = serializers.DeleteFileSerializer
+
+    def list(self,request):
+        return Response({'Server Response': "URL para eliminar archivos"})
+
+    def create(self, request):
+        """Aquí según una url se debería eliminar el archivo"""
+
+        params = serializers.DeleteFileSerializer(data=request.data)
+        if not params.is_valid():
+            return Response({'Server Response': "URL a elimiminar no válida"})
+        else:
+            filename = params.data.get('filename')
+            try:
+                userfile_model = models.UserFile.objects.get(filename=filename)
+            except models.UserFile.DoesNotExist:
+                userfile_model = None
+            if userfile_model != None:
+                os.remove(os.path.join(settings.MEDIA_ROOT, userfile_model.url_docs + "/" + filename.replace(" ","_")))
+                userfile_model.delete()
+                return Response({'Server Response': filename})
+            else:
+                return Response({'Server Response': "No se encontraron candidatos"})
+
+
+
 class UserProcessHistoryViewSet(viewsets.ModelViewSet):
     """Create the history of user status bar """
 

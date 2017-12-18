@@ -162,3 +162,6 @@ class ListUserPlanSerializer(serializers.Serializer):
 
 class GetUserPlanSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=255)
+
+class DeleteFileSerializer(serializers.Serializer):
+    filename = serializers.CharField(max_length=255)

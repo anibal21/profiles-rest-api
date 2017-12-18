@@ -15,6 +15,7 @@ router.register('file-upload', views.FileUploadViewSet)
 router.register('multi-upload', views.MultiUploadViewSet)
 router.register('plan', views.PlanViewSet)
 router.register('user_plan', views.UserPlanViewSet, base_name='user_plan')
+router.register('delete_file', views.DeleteFileViewSet, base_name='delete_file')
 router.register('user-process-history', views.UserProcessHistoryViewSet)
 
 urlpatterns = [
