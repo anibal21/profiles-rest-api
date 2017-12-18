@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from . import models
+import decimal
+
 
 #To create directories
 import os, shutil, errno
@@ -118,6 +120,28 @@ class MultiUploadSerializer(serializers.ModelSerializer):
             url_docs = hashed
         )
         userfile.save()
+
+        print("gettype filetype")
+        print(type(validated_data['filetype'].id))
+        #int
+        print("gettype filesize")
+        print(type(validated_data['filesize']))
+        #string
+        user_process_history = models.UserProcessHistory.objects.get(user_profile = user, status = 1)
+
+        if validated_data['filetype'].id == 1:
+            user_process_history.filled_storage_image = user_process_history.filled_storage_image + decimal.Decimal(validated_data['filesize'])
+            user_process_history.filled_storage = user_process_history.filled_storage + decimal.Decimal(validated_data['filesize'])
+        elif validated_data['filetype'].id == 2:
+            user_process_history.filled_storage_video = user_process_history.filled_storage_image + decimal.Decimal(validated_data['filesize'])
+            user_process_history.filled_storage = user_process_history.filled_storage + decimal.Decimal(validated_data['filesize'])
+        elif validated_data['filetype'].id == 3:
+            user_process_history.filled_storage_music = user_process_history.filled_storage_image + decimal.Decimal(validated_data['filesize'])
+            user_process_history.filled_storage = user_process_history.filled_storage + decimal.Decimal(validated_data['filesize'])
+        elif validated_data['filetype'].id == 4:
+            user_process_history.filled_storage_doc = user_process_history.filled_storage_image + decimal.Decimal(validated_data['filesize'])
+            user_process_history.filled_storage = user_process_history.filled_storage + decimal.Decimal(validated_data['filesize'])
+        user_process_history.save()
 
         return userfile
 
