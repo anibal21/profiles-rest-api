@@ -190,8 +190,9 @@ class DeleteFileViewSet(viewsets.ViewSet):
             return Response({'Server Response': "URL a elimiminar no valida"})
         else:
             filename = params.data.get('filename')
+            email = params.data.get('email')
             try:
-                userfile_model = models.UserFile.objects.get(filename=filename)
+                userfile_model = models.UserFile.objects.get(filename=filename,email=email)
             except models.UserFile.DoesNotExist:
                 userfile_model = None
             if userfile_model != None:
