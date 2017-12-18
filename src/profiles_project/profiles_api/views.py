@@ -184,7 +184,6 @@ class DeleteFileViewSet(viewsets.ViewSet):
         return Response({'Server Response': "URL para eliminar archivos"})
 
     def create(self, request):
-        """Aqui segun una url se debería eliminar el archivo"""
         params = serializers.DeleteFileSerializer(data=request.data)
         if not params.is_valid():
             return Response({'Server Response': "URL a elimiminar no válida"})
