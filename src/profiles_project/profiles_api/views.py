@@ -186,7 +186,7 @@ class DeleteFileViewSet(viewsets.ViewSet):
     def create(self, request):
         params = serializers.DeleteFileSerializer(data=request.data)
         if not params.is_valid():
-            return Response({'Server Response': "URL a elimiminar no válida"})
+            return Response({'Server Response': "URL a elimiminar no valida"})
         else:
             filename = params.data.get('filename')
             try:
