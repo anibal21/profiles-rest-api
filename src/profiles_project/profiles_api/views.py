@@ -145,8 +145,9 @@ class LoginViewSet(viewsets.ViewSet):
             token = ObtainAuthToken().post(request).data['token']
             user_model = models.UserProfile.objects.get(email=username);
             plan_model = models.UserPlan.objects.get(user=user_model, status=1)
-            user_history = models.UserProcessHistory.objects.get(user_profile = user_model, status = 1)
-            if not user_history:
+            try:
+                user_history = models.UserProcessHistory.objects.get(user_profile = user_model, status = 1)
+            except models.UserProcessHistory.DoesNotExist:
                 user_history = models.UserProcessHistory(
                     user_profile = user_model,
                     description = "Login usuario",
