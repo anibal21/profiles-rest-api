@@ -405,7 +405,7 @@ class ListCodesViewSet(viewsets.ModelViewSet):
                     serializer_response = serializers.ListCodesByUserSerializer(code_model, many=True)
                     return Response(serializer_response.data)
                 except models.Codes.DoesNotExist:
-                    return Response({'Server Response': "Ese usuario no tiene referidos aún"})
+                    return Response({'Server Response': "Ese usuario no tiene referidos aun"})
             except models.UserCollector.DoesNotExist:
                 return Response({'Server Response': "Ese usuario no existe"})
         else:
@@ -431,6 +431,6 @@ class RegisterCollectorViewSet(viewsets.ModelViewSet):
                     password = params.data.get("password")
                 )
                 collector_model.save()
-                return Response({'Server Response': "El usuario se ha agregado con éxito"})
+                return Response({'Server Response': "El usuario se ha agregado con exito"})
         else:
             return Response({'Server Response': "Problemas con los campos!"})
