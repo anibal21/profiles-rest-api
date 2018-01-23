@@ -17,6 +17,10 @@ router.register('plan', views.PlanViewSet)
 router.register('user_plan', views.UserPlanViewSet, base_name='user_plan')
 router.register('delete_file', views.DeleteFileViewSet, base_name='delete_file')
 router.register('user-process-history', views.UserProcessHistoryViewSet)
+router.register('collector_login', views.LoginCollectorViewSet, base_name='collector_login')
+router.register('add_code', views.AddCodeViewSet, base_name='add_code')
+router.register('list_codes', views.ListCodesViewSet, base_name='list_codes')
+router.register('collector_register', views.RegisterCollectorViewSet, base_name='collector_register')
 
 urlpatterns = [
     url(r'^hello-view/', views.HelloApiView.as_view()),

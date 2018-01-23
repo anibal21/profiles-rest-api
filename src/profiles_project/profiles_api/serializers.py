@@ -166,3 +166,31 @@ class GetUserPlanSerializer(serializers.Serializer):
 class DeleteFileSerializer(serializers.Serializer):
     filename = serializers.CharField(max_length=255)
     email = serializers.CharField(max_length=255)
+
+class LoginCollectorSerializer(serializers.Serializer):
+    rut = serializers.CharField(max_length=255)
+    password = serializers.CharField(max_length=100)
+
+class CollectorSerializer(serializers.Serializer):
+    collector_rut = serializers.CharField(max_length=255)
+    name = serializers.CharField(max_length=255)
+    password = serializers.CharField(max_length=255)
+    status = serializers.CharField(max_length=255)
+
+class AddCodeSerializer(serializers.Serializer):
+    collector_rut = serializers.CharField(max_length=255)
+    email = serializers.CharField(max_length=255)
+
+class ListCodesSerializer(serializers.Serializer):
+    collector_rut = serializers.CharField(max_length=255)
+
+class ListCodesByUserSerializer(serializers.Serializer):
+    collector = serializers.CharField(max_length=255)
+    email = serializers.CharField(max_length=255)
+    given_date = serializers.CharField(max_length=255)
+    status = serializers.IntegerField(default=1)
+
+class RegisterCollectorSerializer(serializers.Serializer):
+    collector_rut = serializers.CharField(max_length=100)
+    name = serializers.CharField(max_length=255)
+    password = serializers.CharField(max_length=255)

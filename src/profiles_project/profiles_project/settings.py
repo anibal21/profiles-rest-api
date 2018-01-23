@@ -113,6 +113,8 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
+DATETIME_FORMAT = '%m/%d/%Y' 
+
 USE_I18N = True
 
 USE_L10N = True

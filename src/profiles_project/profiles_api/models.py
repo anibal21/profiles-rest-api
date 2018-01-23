@@ -153,3 +153,19 @@ class status(models.Model):
     def __str__(self):
         """ Used for Django to convert object to String"""
         return str(self.name)
+
+class UserCollector(models.Model):
+    collector_rut = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
+    password = models.CharField(max_length=255)
+    status = models.IntegerField(default=1)
+
+    def __str__(self):
+        """ Used for Django to convert object to String"""
+        return str(self.collector_rut)
+
+class Codes(models.Model):
+    collector = models.ForeignKey('UserCollector', on_delete=models.CASCADE)
+    email = models.CharField(max_length=255)
+    given_date = models.DateTimeField(auto_now_add=True)
+    status = models.IntegerField(default=1)

@@ -13,6 +13,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import BasePermission
 from rest_framework.parsers import MultiPartParser
 from rest_framework.parsers import FormParser
+from django.shortcuts import get_object_or_404
+
 
 #To create directories
 import os, shutil, errno
@@ -333,3 +335,102 @@ class MultiUploadViewSet(viewsets.ModelViewSet):
             return filtered_queryset
         else:
             return queryset.filter(user=user)
+
+class LoginCollectorViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.LoginCollectorSerializer
+
+    def list(self,request):
+        return Response({'Server Response': "Login de colectores"})
+
+    def create(self, request):
+        params = serializers.LoginCollectorSerializer(data=request.data)
+        if params.is_valid():
+            collector = get_object_or_404(models.UserCollector, collector_rut=params.data.get("rut"), password=params.data.get("password"))
+            if collector is not None:
+                serializer = serializers.CollectorSerializer(collector)
+                return Response({'user': serializer.data})
+            else:
+                return Response({'Server Response': "Wrong credencials provided!"})
+        else:
+            return Response({'Server Response': "Problem with fields!"})
+
+class AddCodeViewSet(viewsets.ModelViewSet):
+
+    queryset = models.Codes.objects.all()
+    serializer_class = serializers.AddCodeSerializer
+
+    def list(self,request):
+        return Response({'Server Response': "Add codes"})
+
+    def create(self, request):
+        params = serializers.AddCodeSerializer(data=request.data)
+        if params.is_valid():
+            collector = get_object_or_404(models.UserCollector, collector_rut=params.data.get("collector_rut"))
+            if collector is not None:
+                try:
+                    code_model = models.Codes.objects.get(email=params.data.get("email"))
+                    return Response({'code': "The email is already taken!"})
+                except models.Codes.DoesNotExist:
+                    try:
+                        user = models.UserProfile.objects.get(email=params.data.get("email"))
+                        return Response({'code': "The email already exist!"})
+                    except models.UserProfile.DoesNotExist:
+                        code = models.Codes(
+                            collector = collector,
+                            email = params.data.get("email"),
+                            status = 1
+                        )
+                        code.save()
+                        return Response({'code': params.data.get("email")})
+            else:
+                return Response({'Server Response': "Wrong credencials provided!"})
+        else:
+            return Response({'Server Response': "Problem with fields!"})
+
+class ListCodesViewSet(viewsets.ModelViewSet):
+
+    queryset = models.Codes.objects.all()
+    serializer_class = serializers.ListCodesSerializer
+
+    def list(self, request):
+        return Response({'Server Response': "Obtener lista de referidos por colector"})
+
+    def create(self, request):
+        params = serializers.ListCodesSerializer(data=request.data)
+        if params.is_valid():
+            try:
+                collector = models.UserCollector.objects.get(collector_rut=params.data.get("collector_rut"))
+                try:
+                    code_model = models.Codes.objects.filter(collector = collector)
+                    serializer_response = serializers.ListCodesByUserSerializer(code_model, many=True)
+                    return Response(serializer_response.data)
+                except models.Codes.DoesNotExist:
+                    return Response({'Server Response': "Ese usuario no tiene referidos aún"})
+            except models.UserCollector.DoesNotExist:
+                return Response({'Server Response': "Ese usuario no existe"})
+        else:
+            return Response({'Server Response': "Obtener lista de referidos por colector"})
+
+class RegisterCollectorViewSet(viewsets.ModelViewSet):
+
+    serializer_class = serializers.RegisterCollectorSerializer
+
+    def list(self, request):
+        return Response({'Server Response': "Registrar a los colectores"})
+
+    def create(self, request):
+        params = serializers.RegisterCollectorSerializer(data=request.data)
+        if params.is_valid():
+            try:
+                collector = models.UserCollector.objects.get(collector_rut=params.data.get("collector_rut"))
+                return Response({'Server Response': "El usuario ya existe"})
+            except models.UserCollector.DoesNotExist:
+                collector_model = models.UserCollector(
+                    collector_rut = params.data.get("collector_rut"),
+                    name = params.data.get("name"),
+                    password = params.data.get("password")
+                )
+                collector_model.save()
+                return Response({'Server Response': "El usuario se ha agregado con éxito"})
+        else:
+            return Response({'Server Response': "Problemas con los campos!"})
