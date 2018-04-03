@@ -62,8 +62,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         referral = models.Codes.objects.filter(email=email_code)
         if referral:
-            referral_email[0].status = 2
-            referral_email[0].save()
+            referral[0].status = 2
+            referral[0].save()
 
         plan.save()
 
