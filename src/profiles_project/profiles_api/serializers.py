@@ -60,6 +60,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
             plan = plan_model
         )
 
+        referral_email = models.Codes.objects.filter(email=email_code)
+        if referral_email:
+            referral_email.status = 2
+            referral_email.save()
+
         plan.save()
 
 
