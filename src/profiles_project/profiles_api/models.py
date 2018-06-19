@@ -41,6 +41,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     url_docs = models.CharField(max_length=500, null=True)
     plan_id = models.IntegerField(default=1)
     status = models.IntegerField(default=1)
+    phone = models.CharField(default="1111", null=True)
 
     objects = UserProfileManager()
 
