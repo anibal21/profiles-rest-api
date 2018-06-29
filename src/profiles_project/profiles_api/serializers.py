@@ -126,12 +126,13 @@ class MultiUploadSerializer(serializers.ModelSerializer):
         )
         userfile.save()
 
-        print("gettype filetype")
-        print(type(validated_data['filetype'].id))
+        #print("gettype filetype")
+        #print(type(validated_data['filetype'].id))
         #int
-        print("gettype filesize")
-        print(type(validated_data['filesize']))
+        #print("gettype filesize")
+        #print(type(validated_data['filesize']))
         #string
+        
         user_process_history = models.UserProcessHistory.objects.get(user_profile = user, status = 1)
 
         if validated_data['filetype'].id == 1:

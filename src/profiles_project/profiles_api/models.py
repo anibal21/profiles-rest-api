@@ -170,3 +170,25 @@ class Codes(models.Model):
     email = models.CharField(max_length=255)
     given_date = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(default=1)
+
+class Action(models.Model):
+    user = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
+    operation = models.IntegerField(default=1)
+    init_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(auto_now_add=True)
+    current = models.IntegerField(default=1)
+    total = models.IntegerField(default=1)
+    status = models.IntegerField(default=1)
+
+class Bucket(models.Model):
+    action = models.ForeignKey('Action', on_delete=models.CASCADE)
+    email = models.CharField(max_length=255)
+    init_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(auto_now_add=True)
+    filename = models.CharField(max_length=255)
+    filesize = models.CharField(max_length=255)
+    filetype = models.ForeignKey('Filetype', on_delete=models.CASCADE)
+    detail = models.CharField(max_length=500)
+    filechunk = models.CharField(max_length=500)
+    complete = models.IntegerField(default=1) 
+    status = models.IntegerField(default=1)

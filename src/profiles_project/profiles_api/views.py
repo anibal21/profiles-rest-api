@@ -145,7 +145,7 @@ class LoginViewSet(viewsets.ViewSet):
         if ObtainAuthToken().post(request).data:
             username = request.data.get("username")
             token = ObtainAuthToken().post(request).data['token']
-            user_model = models.UserProfile.objects.get(email=username);
+            user_model = models.UserProfile.objects.get(email=username)
             plan_model = models.UserPlan.objects.get(user=user_model, status=1)
             try:
                 user_history = models.UserProcessHistory.objects.get(user_profile = user_model, status = 1)
@@ -203,8 +203,6 @@ class DeleteFileViewSet(viewsets.ViewSet):
                 return Response({'Server Response': filename})
             else:
                 return Response({'Server Response': "No se encontraron candidatos"})
-
-
 
 class UserProcessHistoryViewSet(viewsets.ModelViewSet):
     """Create the history of user status bar """
@@ -321,6 +319,7 @@ class MultiUploadViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
+            print("Ultimo")
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
