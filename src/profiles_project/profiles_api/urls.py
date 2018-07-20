@@ -24,5 +24,7 @@ router.register('collector_register', views.RegisterCollectorViewSet, base_name=
 
 urlpatterns = [
     url(r'^hello-view/', views.HelloApiView.as_view()),
+    url(r'^pull-data/', views.PullDataView.as_view()),
+    url(r'^push-data/', views.PushDataView.as_view()),    
     url(r'', include(router.urls))
 ]

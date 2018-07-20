@@ -132,7 +132,7 @@ class MultiUploadSerializer(serializers.ModelSerializer):
         #print("gettype filesize")
         #print(type(validated_data['filesize']))
         #string
-        
+
         user_process_history = models.UserProcessHistory.objects.get(user_profile = user, status = 1)
 
         if validated_data['filetype'].id == 1:

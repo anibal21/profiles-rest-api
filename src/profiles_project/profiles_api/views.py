@@ -28,6 +28,8 @@ from . import permissions
 import logging
 logger = logging.getLogger("__views__")
 
+import json
+
 # Create your views here.
 
 class HelloApiView(APIView):
@@ -433,3 +435,119 @@ class RegisterCollectorViewSet(viewsets.ModelViewSet):
                 return Response({'Server Response': "El usuario se ha agregado con exito"})
         else:
             return Response({'Server Response': "Problemas con los campos!"})
+
+class PullDataView(APIView):
+
+    def get(self, request, format=None):
+        return Response({'API Response': 'Method to download data from server!'})
+
+    def post(self, request):
+        data = json.loads(request.data["json"])
+        jsonString = {}
+        if "email" in data:
+            email = data["email"]
+            activityModel = models.Activity.objects.filter(email = email).order_by("-id")[:10]
+            if activityModel:
+                listActivity = []
+                for row in activityModel:
+                    activity_json = {}
+                    activity_json["activityid"] = row.activityid
+                    activity_json["email"] = row.email
+                    activity_json["init_date"] = row.init_date
+                    activity_json["end_date"] = row.end_date
+                    activity_json["total_files"] = row.total_files
+                    activity_json["current_files"] = row.current_files
+                    activity_json["detail"] = row.detail
+                    activity_json["bytes"] = row.bytes
+                    activity_json["status"] = row.status
+
+                    filesModel = models.Files.objects.filter(email = email, activityid = row.activityid)
+                    listFiles = []
+                    if filesModel:
+                        for row_file in filesModel:
+                            files = {}
+                            files["fileid"] = row_file.fileid
+                            files["activityid"] = row_file.activityid
+                            files["email"] = row_file.email
+                            files["filename"] = row_file.filename
+                            files["filesize"] = row_file.filesize
+                            files["filetype"] = row_file.filetype
+                            files["status"] = row_file.status
+                            files["detail"] = row_file.detail
+                            files["bytes"] = row_file.bytes
+                            files["path"] = row_file.path
+                            listFiles[row_file.fileid] = files
+                    activity_json["files"] = listFiles
+                    listActivity[row.activityid] = activity_json
+                jsonString["activities"] = listActivity
+            else:
+                return Response({'API_Response': "There's no Activities", "type" : "2", "json" : jsonString})
+            return Response({'API_Response': "JSON Format is correct, all done","type" : "1","json":jsonString})
+        else:
+            return Response({"API_Response": "Bad json format: email index doesn't exist", "type":"2","json":jsonString})
+
+class PushDataView(APIView):
+
+    def get(self, request, format=None):
+        return Response({'API Response': 'Method to upload data to server!'})
+
+    def post(self, request):
+        data = json.loads(request.data["json"])
+        if "activities" in data:
+            if "email" in data:
+                email = data["email"]
+                realActivityId = 0
+                for row in data["activities"]:
+                    activityModel = models.Activity.objects.filter(email = data["email"], activityid = row["id"])
+                    if not activityModel:
+                        activityNode = models.Activity (
+                            activityid = row["id"],
+                            email = email,
+                            init_date = row["init_date"],
+                            end_date = row["end_date"],
+                            total_files = row["total_files"],
+                            current_files = row["current_files"],
+                            detail = row["detail"],
+                            bytes = row["bytes"],
+                            status = row["status"],
+                        )
+                        activityNode.save()
+                        realActivityId = activityNode.id
+                    else:
+                        realActivityId = activityModel[0].id
+                        activityModel[0].end_date = row["end_date"]
+                        activityModel[0].total_files = row["total_files"]
+                        activityModel[0].current_files = row["current_files"]
+                        activityModel[0].detail = row["detail"]
+                        activityModel[0].status = row["status"]
+                        activityModel[0].bytes = row["bytes"]
+                    if "files" in row:
+                        for row_file in row["files"]:
+                            fileModel = models.Files.objects.filter(activityid = row["id"], email = email)
+                            if not fileModel:
+                                fileNode = models.Files(
+                                    fileid = row_file["fileid"],
+                                    activityid = row_file["activityid"],
+                                    email = email,
+                                    filename = row_file["filename"],
+                                    filesize = row_file["filesize"],
+                                    filetype = row_file["filetype"],
+                                    status = row_file["status"],
+                                    detail = row_file["detail"],
+                                    bytes = row_file["bytes"],
+                                    path = row_file["path"]
+                                )
+                                filenode.save()
+                            else:
+                                fileModel[0].filename = row_file["filename"]
+                                fileModel[0].filesize = row_file["filesize"]
+                                fileModel[0].filetype = row_file["filetype"]
+                                fileModel[0].status = row_file["status"]
+                                fileModel[0].detail = row_file["detail"]
+                                fileModel[0].bytes = row_file["bytes"]
+                                fileModel[0].path = row_file["path"]
+            else:
+                return Response({'API Response': "Bad json format: email index doesn't exist"})
+            return Response({'API Response': "JSON Format is correct, all done"})
+        else:
+            return Response({'API Response': "Bad json format: activities index doesn't exist"})
