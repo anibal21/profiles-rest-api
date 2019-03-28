@@ -1,7 +1,7 @@
 **/env/
 **/deploy/
-**/logs/
-**/uploaded_media/
+src/logs/
+src/uploaded_media/
 .bash_history
 .bash_logout
 .git/
