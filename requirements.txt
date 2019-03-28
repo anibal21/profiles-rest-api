@@ -8,4 +8,4 @@ six
 uWSGI
 Pillow
 psycopg2-binary
-
+gunicorn
