@@ -2,3 +2,14 @@
 **/deploy/
 **/logs/
 **/uploaded_media/
+.bash_history
+.bash_logout
+.git/
+.bashrc
+.gitconfig
+gnupg/
+.local/
+.profile
+.python_history
+.sudo_as_admin_successful
+runserver.sh
