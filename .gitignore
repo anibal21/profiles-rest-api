@@ -13,3 +13,4 @@ gnupg/
 .python_history
 .sudo_as_admin_successful
 runserver.sh
+src/profiles_project/static/
